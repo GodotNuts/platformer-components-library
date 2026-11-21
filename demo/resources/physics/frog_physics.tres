@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PhysicsConstants" format=3]
+
+[ext_resource type="Script" path="res://resources/physics_constants.gd" id="1_physics"]
+
+[resource]
+script = ExtResource("1_physics")
+player_jump_strength = 380.0
+player_time_in_air = 0.8
+x_max_speed = 140.0
+x_acceleration = 2000.0
+x_deceleration = 600.0

@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://dvxertm7htsc6"]
+
+[ext_resource type="PackedScene" uid="uid://cbwxb6in5ekcr" path="res://demo/scenes/pickups/pickup_base.tscn" id="1_pickup_base"]
+[ext_resource type="Script" uid="uid://ceq0jj07u3p1f" path="res://demo/scenes/visuals/circle_visual.gd" id="2_circle"]
+[ext_resource type="Resource" uid="uid://v77s1u1emmny" path="res://resources/local_events/pickup_received.tres" id="2_vyevn"]
+[ext_resource type="Script" uid="uid://dro4wjh1gt14v" path="res://components/pickups/pickup_received.gd" id="4_uth7k"]
+
+[node name="Coin" unique_id=1001202620 instance=ExtResource("1_pickup_base")]
+pickup_received = ExtResource("2_vyevn")
+
+[node name="Visual" type="Node2D" parent="." index="1" unique_id=368014463]
+script = ExtResource("2_circle")
+radius = 7.0
+color = Color(1, 0.8, 0.2, 1)
+
+[node name="PickupReceived" type="Node" parent="." index="2" unique_id=796444577]
+script = ExtResource("4_uth7k")
+distance = 20.0
+time = 0.5
+event = ExtResource("2_vyevn")
+metadata/_custom_type_script = "uid://dro4wjh1gt14v"

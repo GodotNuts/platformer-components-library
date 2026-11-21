@@ -1,0 +1,85 @@
+[gd_scene format=3]
+
+[ext_resource type="Resource" path="res://demo/resources/local_events/move.tres" id="1_move"]
+[ext_resource type="Resource" path="res://demo/resources/local_events/reverse_direction.tres" id="2_reverse_direction"]
+[ext_resource type="Resource" path="res://demo/resources/local_events/player_touched.tres" id="3_player_touched"]
+[ext_resource type="Resource" path="res://demo/resources/local_events/died.tres" id="4_died"]
+[ext_resource type="Resource" path="res://demo/resources/physics/flyer_physics.tres" id="5_flyer_physics"]
+[ext_resource type="Script" path="res://demo/scenes/enemies/flyer.gd" id="6_flyer"]
+[ext_resource type="Script" path="res://demo/scenes/visuals/square_visual.gd" id="7_square_visual"]
+[ext_resource type="PackedScene" path="res://components/npc/avoid_wall.tscn" id="8_avoid_wall"]
+[ext_resource type="Script" path="res://components/detection/player_detection.gd" id="9_player_detection"]
+[ext_resource type="Script" path="res://demo/scenes/enemies/stompable.gd" id="10_stompable"]
+[ext_resource type="Resource" path="res://demo/resources/global_events/enemy_stomped.tres" id="11_enemy_stomped"]
+[ext_resource type="Resource" path="res://demo/resources/global_events/player_hurt.tres" id="12_player_hurt"]
+[ext_resource type="Script" path="res://components/level/stay_dead.gd" id="13_stay_dead"]
+[ext_resource type="Resource" path="res://demo/resources/global_events/level_readied.tres" id="14_level_readied"]
+[ext_resource type="Script" path="res://components/physics/set_x_velocity.gd" id="15_set_x_velocity"]
+[ext_resource type="Script" path="res://components/physics/set_y_velocity.gd" id="16_set_y_velocity"]
+[ext_resource type="Script" path="res://components/physics/move_and_slide.gd" id="17_move_and_slide"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(24, 24)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_touch"]
+size = Vector2(28, 28)
+
+[node name="Flyer" type="CharacterBody2D" node_paths=PackedStringArray("facing")]
+collision_layer = 4
+collision_mask = 1
+script = ExtResource("6_flyer")
+move = ExtResource("1_move")
+reverse_direction = ExtResource("2_reverse_direction")
+facing = NodePath("FacingRoot")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_body")
+
+[node name="Visual" type="Node2D" parent="."]
+script = ExtResource("7_square_visual")
+color = Color(0.6, 0.3, 0.85, 1)
+
+[node name="FacingRoot" type="Node2D" parent="."]
+
+[node name="AvoidWall" parent="FacingRoot" instance=ExtResource("8_avoid_wall")]
+distance_x = 16.0
+reverse_direction = ExtResource("2_reverse_direction")
+collision_mask = 1
+
+[node name="PlayerDetection" type="Area2D" parent="."]
+script = ExtResource("9_player_detection")
+player_detected = ExtResource("3_player_touched")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetection"]
+shape = SubResource("RectangleShape2D_touch")
+
+[node name="Stompable" type="Node" parent="."]
+script = ExtResource("10_stompable")
+event = ExtResource("3_player_touched")
+died = ExtResource("4_died")
+enemy_stomped = ExtResource("11_enemy_stomped")
+player_hurt = ExtResource("12_player_hurt")
+
+[node name="StayDead" type="Node" parent="." node_paths=PackedStringArray("target")]
+script = ExtResource("13_stay_dead")
+event = ExtResource("14_level_readied")
+target = NodePath("..")
+died = ExtResource("4_died")
+
+[node name="Movement" type="Node" parent="."]
+
+[node name="SetXVelocity" type="Node" parent="Movement" node_paths=PackedStringArray("body")]
+script = ExtResource("15_set_x_velocity")
+body = NodePath("../..")
+physics_constants = ExtResource("5_flyer_physics")
+event = ExtResource("1_move")
+
+[node name="SetYVelocity" type="Node" parent="Movement" node_paths=PackedStringArray("body")]
+script = ExtResource("16_set_y_velocity")
+body = NodePath("../..")
+physics_constants = ExtResource("5_flyer_physics")
+event = ExtResource("1_move")
+
+[node name="MoveAndSlide" type="Node" parent="Movement" node_paths=PackedStringArray("body")]
+script = ExtResource("17_move_and_slide")
+body = NodePath("../..")

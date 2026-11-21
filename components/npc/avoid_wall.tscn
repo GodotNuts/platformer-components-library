@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://bvchmdnne5oen"]
+
+[ext_resource type="Script" uid="uid://drccrmhvprved" path="res://components/npc/avoid_wall.gd" id="1_8ptay"]
+
+[node name="AvoidWall" type="Node2D" unique_id=641363940]
+script = ExtResource("1_8ptay")
+
+[node name="RayCast2D" type="RayCast2D" parent="." unique_id=692371683]
+unique_name_in_owner = true

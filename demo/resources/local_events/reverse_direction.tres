@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="LocalEventResource" format=3]
+
+[ext_resource type="Script" path="res://resources/local_event_resource.gd" id="1_event"]
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("1_event")

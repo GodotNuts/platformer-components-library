@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="LocalEventResource" format=3 uid="uid://v77s1u1emmny"]
+
+[ext_resource type="Script" uid="uid://dnd5dj1raimmc" path="res://resources/local_event_resource.gd" id="1_mo40m"]
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("1_mo40m")
+metadata/_custom_type_script = "uid://dnd5dj1raimmc"

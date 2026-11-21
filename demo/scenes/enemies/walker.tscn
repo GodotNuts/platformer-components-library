@@ -1,0 +1,102 @@
+[gd_scene format=3]
+
+[ext_resource type="Resource" path="res://demo/resources/local_events/move.tres" id="1_move"]
+[ext_resource type="Resource" path="res://demo/resources/local_events/reverse_direction.tres" id="2_reverse_direction"]
+[ext_resource type="Resource" path="res://demo/resources/local_events/player_touched.tres" id="3_player_touched"]
+[ext_resource type="Resource" path="res://demo/resources/local_events/died.tres" id="4_died"]
+[ext_resource type="Resource" path="res://demo/resources/physics/walker_physics.tres" id="5_walker_physics"]
+[ext_resource type="Script" path="res://demo/scenes/enemies/walker.gd" id="6_walker"]
+[ext_resource type="Script" path="res://demo/scenes/visuals/square_visual.gd" id="7_square_visual"]
+[ext_resource type="PackedScene" path="res://components/npc/avoid_wall.tscn" id="8_avoid_wall"]
+[ext_resource type="PackedScene" path="res://components/npc/avoid_ledge.tscn" id="9_avoid_ledge"]
+[ext_resource type="Script" path="res://components/detection/player_detection.gd" id="10_player_detection"]
+[ext_resource type="Script" path="res://components/detection/enemy_detection.gd" id="11_enemy_detection"]
+[ext_resource type="Script" path="res://demo/scenes/enemies/stompable.gd" id="12_stompable"]
+[ext_resource type="Resource" path="res://demo/resources/global_events/enemy_stomped.tres" id="13_enemy_stomped"]
+[ext_resource type="Resource" path="res://demo/resources/global_events/player_hurt.tres" id="14_player_hurt"]
+[ext_resource type="Script" path="res://components/level/stay_dead.gd" id="15_stay_dead"]
+[ext_resource type="Resource" path="res://demo/resources/global_events/level_readied.tres" id="16_level_readied"]
+[ext_resource type="Script" path="res://components/physics/set_x_velocity.gd" id="17_set_x_velocity"]
+[ext_resource type="Script" path="res://components/physics/apply_gravity.gd" id="18_apply_gravity"]
+[ext_resource type="Script" path="res://components/physics/move_and_slide.gd" id="19_move_and_slide"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(24, 24)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_touch"]
+size = Vector2(28, 28)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bump"]
+size = Vector2(32, 16)
+
+[node name="Walker" type="CharacterBody2D" node_paths=PackedStringArray("facing")]
+collision_layer = 4
+collision_mask = 1
+script = ExtResource("6_walker")
+move = ExtResource("1_move")
+reverse_direction = ExtResource("2_reverse_direction")
+facing = NodePath("FacingRoot")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_body")
+
+[node name="Visual" type="Node2D" parent="."]
+script = ExtResource("7_square_visual")
+color = Color(0.86, 0.2, 0.2, 1)
+
+[node name="FacingRoot" type="Node2D" parent="."]
+
+[node name="AvoidWall" parent="FacingRoot" instance=ExtResource("8_avoid_wall")]
+distance_x = 16.0
+reverse_direction = ExtResource("2_reverse_direction")
+collision_mask = 1
+
+[node name="AvoidLedge" parent="FacingRoot" instance=ExtResource("9_avoid_ledge")]
+distance_x = 8.0
+distance_y = 20.0
+reverse_direction = ExtResource("2_reverse_direction")
+collision_mask = 1
+
+[node name="PlayerDetection" type="Area2D" parent="."]
+script = ExtResource("10_player_detection")
+player_detected = ExtResource("3_player_touched")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetection"]
+shape = SubResource("RectangleShape2D_touch")
+
+[node name="EnemyDetection" type="Area2D" parent="."]
+script = ExtResource("11_enemy_detection")
+enemy_detected = ExtResource("2_reverse_direction")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnemyDetection"]
+shape = SubResource("RectangleShape2D_bump")
+
+[node name="Stompable" type="Node" parent="."]
+script = ExtResource("12_stompable")
+event = ExtResource("3_player_touched")
+died = ExtResource("4_died")
+enemy_stomped = ExtResource("13_enemy_stomped")
+player_hurt = ExtResource("14_player_hurt")
+
+[node name="StayDead" type="Node" parent="." node_paths=PackedStringArray("target")]
+script = ExtResource("15_stay_dead")
+event = ExtResource("16_level_readied")
+target = NodePath("..")
+died = ExtResource("4_died")
+
+[node name="Movement" type="Node" parent="."]
+
+[node name="SetXVelocity" type="Node" parent="Movement" node_paths=PackedStringArray("body")]
+script = ExtResource("17_set_x_velocity")
+body = NodePath("../..")
+physics_constants = ExtResource("5_walker_physics")
+event = ExtResource("1_move")
+
+[node name="ApplyGravity" type="Node" parent="Movement" node_paths=PackedStringArray("body")]
+script = ExtResource("18_apply_gravity")
+physics_values = ExtResource("5_walker_physics")
+body = NodePath("../..")
+
+[node name="MoveAndSlide" type="Node" parent="Movement" node_paths=PackedStringArray("body")]
+script = ExtResource("19_move_and_slide")
+body = NodePath("../..")

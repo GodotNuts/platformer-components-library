@@ -1,0 +1,79 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://components/level/level_ready.gd" id="1_level_ready"]
+[ext_resource type="Resource" path="res://demo/resources/global_events/level_readied.tres" id="2_level_readied"]
+[ext_resource type="Script" path="res://components/pickups/pickup_received.gd" id="3_pickup_received"]
+[ext_resource type="Resource" path="res://demo/resources/global_events/pickup_received.tres" id="4_pickup_event"]
+[ext_resource type="PackedScene" path="res://demo/scenes/environment/platform.tscn" id="5_platform"]
+[ext_resource type="PackedScene" path="res://demo/scenes/pickups/coin.tscn" id="6_coin"]
+[ext_resource type="PackedScene" path="res://demo/scenes/enemies/walker.tscn" id="7_walker"]
+[ext_resource type="PackedScene" path="res://demo/scenes/enemies/flyer.tscn" id="8_flyer"]
+[ext_resource type="PackedScene" path="res://demo/scenes/enemies/frog.tscn" id="9_frog"]
+[ext_resource type="PackedScene" path="res://demo/scenes/player/player.tscn" id="10_player"]
+
+[node name="DemoLevel" type="Node2D"]
+
+[node name="LevelReady" type="Node" parent="."]
+script = ExtResource("1_level_ready")
+level_readied = ExtResource("2_level_readied")
+
+[node name="PickupReceived" type="Node" parent="."]
+script = ExtResource("3_pickup_received")
+event = ExtResource("4_pickup_event")
+
+[node name="Environment" type="Node2D" parent="."]
+
+[node name="Ground" parent="Environment" instance=ExtResource("5_platform")]
+position = Vector2(576, 632)
+size = Vector2(1152, 32)
+
+[node name="LeftWall" parent="Environment" instance=ExtResource("5_platform")]
+position = Vector2(8, 300)
+size = Vector2(16, 600)
+
+[node name="RightWall" parent="Environment" instance=ExtResource("5_platform")]
+position = Vector2(1144, 300)
+size = Vector2(16, 600)
+
+[node name="LowLeftPlatform" parent="Environment" instance=ExtResource("5_platform")]
+position = Vector2(280, 524)
+size = Vector2(220, 16)
+
+[node name="HighPlatform" parent="Environment" instance=ExtResource("5_platform")]
+position = Vector2(620, 424)
+size = Vector2(200, 16)
+
+[node name="LowRightPlatform" parent="Environment" instance=ExtResource("5_platform")]
+position = Vector2(960, 524)
+size = Vector2(200, 16)
+
+[node name="Pickups" type="Node2D" parent="."]
+
+[node name="Coin" parent="Pickups" instance=ExtResource("6_coin")]
+position = Vector2(200, 490)
+
+[node name="Coin2" parent="Pickups" instance=ExtResource("6_coin")]
+position = Vector2(620, 390)
+
+[node name="Coin3" parent="Pickups" instance=ExtResource("6_coin")]
+position = Vector2(960, 490)
+
+[node name="Coin4" parent="Pickups" instance=ExtResource("6_coin")]
+position = Vector2(1060, 596)
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="PlatformWalker" parent="Enemies" instance=ExtResource("7_walker")]
+position = Vector2(300, 504)
+
+[node name="GroundWalker" parent="Enemies" instance=ExtResource("7_walker")]
+position = Vector2(800, 604)
+
+[node name="Flyer" parent="Enemies" instance=ExtResource("8_flyer")]
+position = Vector2(600, 220)
+
+[node name="Frog" parent="Enemies" instance=ExtResource("9_frog")]
+position = Vector2(450, 604)
+
+[node name="Player" parent="." instance=ExtResource("10_player")]
+position = Vector2(80, 604)

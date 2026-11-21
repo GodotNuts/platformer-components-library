@@ -1,0 +1,138 @@
+[gd_scene format=3 uid="uid://b65voon7ysf1y"]
+
+[ext_resource type="Script" uid="uid://cnchg6ibimplx" path="res://demo/scenes/player/player.gd" id="1_player"]
+[ext_resource type="Script" uid="uid://ceq0jj07u3p1f" path="res://demo/scenes/visuals/circle_visual.gd" id="2_circle"]
+[ext_resource type="Resource" path="res://demo/resources/physics/player_physics.tres" id="3_physics"]
+[ext_resource type="Resource" path="res://demo/resources/global_events/actions_just_pressed.tres" id="4_just_pressed"]
+[ext_resource type="Resource" path="res://demo/resources/global_events/actions_held.tres" id="5_held"]
+[ext_resource type="Resource" path="res://resources/global_events/input_vector_changed.tres" id="6_input_vector"]
+[ext_resource type="Resource" path="res://demo/resources/local_events/jump.tres" id="7_jump"]
+[ext_resource type="Resource" path="res://demo/resources/local_events/dash.tres" id="8_dash"]
+[ext_resource type="Resource" path="res://demo/resources/local_events/wall_grab.tres" id="9_wall_grab"]
+[ext_resource type="Resource" path="res://demo/resources/local_events/direction_changed.tres" id="10_direction"]
+[ext_resource type="Resource" path="res://demo/resources/global_events/player_hurt.tres" id="11_hurt"]
+[ext_resource type="Resource" path="res://demo/resources/global_events/enemy_stomped.tres" id="12_stomped"]
+[ext_resource type="Script" uid="uid://cljodd8d62lng" path="res://components/player/get_input_vector.gd" id="13_get_input_vector"]
+[ext_resource type="Script" uid="uid://xp56dvwtad66" path="res://components/player/action_just_pressed.gd" id="14_action_just_pressed"]
+[ext_resource type="Script" uid="uid://b63h47r8xuy14" path="res://components/player/action_pressed.gd" id="15_action_pressed"]
+[ext_resource type="Script" uid="uid://cmum2tewmdea3" path="res://components/physics/is_on_floor.gd" id="16_is_on_floor"]
+[ext_resource type="Script" uid="uid://cldfpsrleacyr" path="res://components/physics/set_x_velocity.gd" id="17_set_x_velocity"]
+[ext_resource type="Script" uid="uid://cvlqmy56bv824" path="res://components/physics/jump.gd" id="18_jump"]
+[ext_resource type="Script" uid="uid://va5i1kdq27ne" path="res://components/physics/coyote_jump.gd" id="19_coyote_jump"]
+[ext_resource type="Script" uid="uid://d1h30befeh2ij" path="res://components/physics/double_jump.gd" id="20_double_jump"]
+[ext_resource type="Script" uid="uid://da038wy6pqt3i" path="res://components/physics/dash.gd" id="21_dash"]
+[ext_resource type="Script" uid="uid://bm1mjbhavuj73" path="res://components/physics/wall_grab.gd" id="22_wall_grab"]
+[ext_resource type="Script" uid="uid://bfbtb6h5wg60x" path="res://components/physics/gamma_time.gd" id="23_gamma_time"]
+[ext_resource type="Script" uid="uid://1pk4qyracbx3" path="res://components/physics/apply_gravity.gd" id="24_apply_gravity"]
+[ext_resource type="Script" uid="uid://bg0sqi0w5nu4n" path="res://components/physics/move_and_slide.gd" id="25_move_and_slide"]
+[ext_resource type="Script" path="res://components/physics/knockback.gd" id="26_knockback"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_player"]
+radius = 12.0
+
+[node name="Player" type="CharacterBody2D" unique_id=573035064]
+collision_layer = 2
+script = ExtResource("1_player")
+physics_constants = ExtResource("3_physics")
+actions_just_pressed = ExtResource("4_just_pressed")
+actions_held = ExtResource("5_held")
+input_vector_changed = ExtResource("6_input_vector")
+jump = ExtResource("7_jump")
+dash = ExtResource("8_dash")
+wall_grab = ExtResource("9_wall_grab")
+direction_changed = ExtResource("10_direction")
+player_hurt = ExtResource("11_hurt")
+enemy_stomped = ExtResource("12_stomped")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=960772518]
+shape = SubResource("CircleShape2D_player")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=858425795]
+
+[node name="Visual" type="Node2D" parent="." unique_id=478491706]
+script = ExtResource("2_circle")
+
+[node name="Input" type="Node" parent="." unique_id=344367992]
+
+[node name="GetInputVector" type="Node" parent="Input" unique_id=1700747881]
+script = ExtResource("13_get_input_vector")
+vector_left = "move_left"
+vector_right = "move_right"
+vector_up = "move_up"
+vector_down = "move_down"
+input_vector_changed = ExtResource("6_input_vector")
+
+[node name="ActionJustPressed" type="Node" parent="Input" unique_id=1433749284]
+script = ExtResource("14_action_just_pressed")
+actions = Array[String](["jump", "dash"])
+input_changed = ExtResource("4_just_pressed")
+
+[node name="ActionPressed" type="Node" parent="Input" unique_id=472750646]
+script = ExtResource("15_action_pressed")
+actions = Array[String](["grab"])
+input_changed = ExtResource("5_held")
+
+[node name="Movement" type="Node" parent="." unique_id=409093729]
+
+[node name="IsOnFloor" type="Node" parent="Movement" unique_id=1655354014 node_paths=PackedStringArray("body")]
+script = ExtResource("16_is_on_floor")
+body = NodePath("../..")
+
+[node name="SetXVelocity" type="Node" parent="Movement" unique_id=1787495705 node_paths=PackedStringArray("body")]
+script = ExtResource("17_set_x_velocity")
+body = NodePath("../..")
+physics_constants = ExtResource("3_physics")
+event = ExtResource("6_input_vector")
+
+[node name="Jump" type="Node" parent="Movement" unique_id=590368274]
+script = ExtResource("18_jump")
+physics_constants = ExtResource("3_physics")
+event = ExtResource("7_jump")
+
+[node name="CoyoteJump" type="Node" parent="Movement" unique_id=1118881882 node_paths=PackedStringArray("is_on_floor")]
+script = ExtResource("19_coyote_jump")
+physics_constants = ExtResource("3_physics")
+is_on_floor = NodePath("../IsOnFloor")
+event = ExtResource("7_jump")
+
+[node name="DoubleJump" type="Node" parent="Movement" unique_id=1666315580 node_paths=PackedStringArray("is_on_floor")]
+script = ExtResource("20_double_jump")
+physics_constants = ExtResource("3_physics")
+is_on_floor = NodePath("../IsOnFloor")
+event = ExtResource("7_jump")
+
+[node name="Dash" type="Node" parent="Movement" unique_id=851913702 node_paths=PackedStringArray("is_on_floor", "gravity")]
+script = ExtResource("21_dash")
+physics_constants = ExtResource("3_physics")
+is_on_floor = NodePath("../IsOnFloor")
+gravity = NodePath("../ApplyGravity")
+input_vector_changed = ExtResource("6_input_vector")
+event = ExtResource("8_dash")
+
+[node name="WallGrab" type="Node" parent="Movement" unique_id=740272404 node_paths=PackedStringArray("is_on_floor", "gravity")]
+script = ExtResource("22_wall_grab")
+physics_constants = ExtResource("3_physics")
+is_on_floor = NodePath("../IsOnFloor")
+gravity = NodePath("../ApplyGravity")
+event = ExtResource("9_wall_grab")
+
+[node name="GammaTime" type="Node" parent="Movement" unique_id=212091478 node_paths=PackedStringArray("is_on_floor")]
+script = ExtResource("23_gamma_time")
+physics_constants = ExtResource("3_physics")
+is_on_floor = NodePath("../IsOnFloor")
+event = ExtResource("10_direction")
+
+[node name="Knockback" type="Node" parent="Movement" node_paths=PackedStringArray("set_x_velocity")]
+script = ExtResource("26_knockback")
+event = ExtResource("11_hurt")
+knockback_layers = 4
+set_x_velocity = NodePath("../SetXVelocity")
+
+[node name="ApplyGravity" type="Node" parent="Movement" unique_id=129237317 node_paths=PackedStringArray("body")]
+script = ExtResource("24_apply_gravity")
+physics_values = ExtResource("3_physics")
+body = NodePath("../..")
+
+[node name="MoveAndSlide" type="Node" parent="Movement" unique_id=1269715016 node_paths=PackedStringArray("body")]
+script = ExtResource("25_move_and_slide")
+body = NodePath("../..")

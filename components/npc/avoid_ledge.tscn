@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://b4scuhbcxih2a"]
+
+[ext_resource type="Script" uid="uid://gudwhay78qcx" path="res://components/npc/avoid_ledge.gd" id="1_77wke"]
+
+[node name="AvoidLedge" type="Node2D" unique_id=248244468]
+script = ExtResource("1_77wke")
+
+[node name="RayCast2D" type="RayCast2D" parent="." unique_id=740410935]
+unique_name_in_owner = true

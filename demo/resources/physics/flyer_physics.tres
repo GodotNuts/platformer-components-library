@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="PhysicsConstants" format=3]
+
+[ext_resource type="Script" path="res://resources/physics_constants.gd" id="1_physics"]
+
+[resource]
+script = ExtResource("1_physics")
+x_max_speed = 80.0
+x_acceleration = 300.0
+x_deceleration = 300.0
+y_max_speed = 40.0
+y_acceleration = 200.0
+y_deceleration = 200.0
